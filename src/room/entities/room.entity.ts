@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { RoomType } from '../room-type.enum';
 
 @Entity()
 export class Room {
@@ -15,8 +16,8 @@ export class Room {
   @Column()
   roomNumber: string;
 
-  @Column()
-  type: string;
+  @Column({ type: 'varchar', length: 50 })
+  type: RoomType;
 
   @Column('float')
   price: number;

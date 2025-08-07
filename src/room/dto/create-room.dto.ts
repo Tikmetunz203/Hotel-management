@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
   MaxLength,
   Min,
 } from 'class-validator';
+import { RoomType } from '../room-type.enum';
 
 export class CreateRoomDto {
   @IsString()
@@ -18,13 +19,13 @@ export class CreateRoomDto {
   })
   roomNumber: string;
 
-  @IsString()
-  @MaxLength(50)
+  @IsEnum(RoomType)
   @ApiProperty({
-    description: 'The type of the room (e.g., Single, Double, Suite)',
-    example: 'Deluxe',
+    enum: RoomType,
+    description: 'ประเภทห้อง ต้องเลือกจาก Enum เท่านั้น',
+    example: RoomType.DELUXE,
   })
-  type: string;
+  type: RoomType;
 
   @IsNumber()
   @Min(0)

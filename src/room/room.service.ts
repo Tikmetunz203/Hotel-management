@@ -4,6 +4,7 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room } from './entities/room.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RoomType } from './room-type.enum';
 
 @Injectable()
 export class RoomService {
@@ -20,6 +21,13 @@ export class RoomService {
 
   findAll(): Promise<Room[]> {
     return this.roomRepository.find({ withDeleted: false }); // Fetch all rooms, including soft-deleted ones
+  }
+
+  async findByType(type: RoomType): Promise<Room[]> {
+    return this.roomRepository.find({
+      where: { type },
+      withDeleted: false, // Exclude soft-deleted rooms
+    });
   }
 
   findOne(id: number) {

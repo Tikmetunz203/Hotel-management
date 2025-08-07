@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
+import { ApiQuery } from '@nestjs/swagger';
+import { RoomType } from './room-type.enum';
 
 @Controller('/room')
 export class RoomController {
@@ -21,7 +24,11 @@ export class RoomController {
   }
 
   @Get()
-  findAll() {
+  @ApiQuery({ name: 'type', enum: RoomType, required: false })
+  findAll(@Query('type') type?: RoomType) {
+    if (type) {
+      return this.roomService.findByType(type);
+    }
     return this.roomService.findAll();
   }
 
