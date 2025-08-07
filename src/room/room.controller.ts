@@ -25,11 +25,31 @@ export class RoomController {
 
   @Get()
   @ApiQuery({ name: 'type', enum: RoomType, required: false })
-  findAll(@Query('type') type?: RoomType) {
-    if (type) {
-      return this.roomService.findByType(type);
-    }
-    return this.roomService.findAll();
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'sortBy', required: false, example: 'roomNumber' })
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    enum: ['ASC', 'DESC'],
+    example: 'ASC',
+  })
+  findAll(
+    @Query('type') type?: RoomType,
+    @Query('limit') limit = '10',
+    @Query('sortBy') sortBy = 'roomNumber',
+    @Query('order') order: 'ASC' | 'DESC' = 'ASC',
+    @Query('page') page = '1',
+  ) {
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = Math.min(parseInt(limit, 10), 100);
+    return this.roomService.findAll({
+      type,
+      sortBy,
+      order,
+      limit: limitNumber,
+      page: pageNumber,
+    });
   }
 
   @Get(':id')
