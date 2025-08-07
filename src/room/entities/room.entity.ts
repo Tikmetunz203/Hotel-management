@@ -13,7 +13,7 @@ export class Room {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 10, unique: true })
   roomNumber: string;
 
   @Column({ type: 'varchar', length: 50 })

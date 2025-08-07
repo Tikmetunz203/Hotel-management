@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room } from './entities/room.entity';
@@ -15,6 +15,12 @@ export class RoomService {
 
   // Method to create a new room
   async create(createRoomDto: CreateRoomDto): Promise<Room> {
+    const existingRoom = await this.roomRepository.findOneBy({
+      roomNumber: createRoomDto.roomNumber,
+    });
+    if (existingRoom) {
+      throw new ConflictException('Room number already number already exists');
+    }
     const room = this.roomRepository.create(createRoomDto);
     return this.roomRepository.save(room);
   }
